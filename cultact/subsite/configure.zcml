@@ -7,13 +7,38 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
+  <includeDependencies package="." />
+  
+  <!-- Include our dependencies -->
+  <include package="plone.app.dexterity" />
+
+  <include package=".browser" />
+  <include package=".behaviors" />
+
+  <i18n:registerTranslations directory="locales" />
+
   <genericsetup:registerProfile
       name="default"
-      title="cultact.subsite"
+      title="Cultural Agenda: subsites"
       directory="profiles/default"
       description="Installs the cultact.subsite package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  <!-- -*- extra stuff goes here -*- -->
-  
+
+  <!-- setuphandlers via profiles/default/import_steps.xml -->
+
+  <!-- for debugging only / auto loaded in tests -->
+  <!--
+  <include package=".tests" file="tests.zcml" />
+  -->
+
+  <subscriber
+      for="zope.traversing.interfaces.IBeforeTraverseEvent"
+      handler=".subscribers.subsite_request" />
+
+  <subscriber
+        for=".content.ISubsite
+             zope.lifecycleevent.IObjectAddedEvent"
+        handler=".subscribers.subsite_added"/>
+
 </configure>

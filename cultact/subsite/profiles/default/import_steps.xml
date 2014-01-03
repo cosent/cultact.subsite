@@ -1,0 +1,10 @@
+<?xml version="1.0"?>                                                                                <import-steps>
+  <import-step id="cultact.subsite_various"
+               version="1"
+               handler="cultact.subsite.setuphandlers.importVarious"
+               title="cultact.subsite: miscellaneous import steps">
+    Various import steps that are not handled by GS import/export
+    handlers.
+    <dependency step="typeinfo" />
+  </import-step>
+</import-steps>

@@ -1,0 +1,5 @@
+<object name="portal_types">
+ <object name="cultact.sittardsite" meta_type="Dexterity FTI"/>
+ <object name="cultact.maastrichtsite" meta_type="Dexterity FTI"/>
+ <object name="cultact.code043site" meta_type="Dexterity FTI"/>
+</object>

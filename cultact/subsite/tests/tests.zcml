@@ -1,0 +1,76 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+
+  <browser:page
+      name="subsite-test-view"
+      for="*"
+      class=".subsite_test_view.SubsiteTestView"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-view"
+      for="*"
+      template="layer-default.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-view2"
+      for="*"
+      template="layer-default.pt"
+      permission="zope2.View"
+      />
+  
+  <browser:page
+      name="layer-test-view"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.ICultactSubsiteLayer"
+      template="layer-cultact.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-other"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.ISubsiteLayer"
+      template="layer-subsite.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-other"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.ICityhubLayer"
+      template="layer-cityhub.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-view"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.ISittardLayer"
+      template="layer-sittard.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-view"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.IMaastrichtLayer"
+      template="layer-maastricht.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="layer-test-view"
+      for="*"
+      layer="cultact.subsite.browser.interfaces.ICode043Layer"
+      template="layer-code043.pt"
+      permission="zope2.View"
+      />
+
+
+</configure>

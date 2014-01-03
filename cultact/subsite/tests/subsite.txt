@@ -1,0 +1,79 @@
+==========================================================
+          Subsite browser layer tests
+==========================================================
+
+
+Set up the browser test
+-----------------------
+
+    >>> app = layer['app']
+    >>> portal = layer['portal']
+    >>> request = layer['request']
+    >>> portal_url = portal.absolute_url()
+    >>> portal.error_log._ignored_exceptions = ()
+
+    >>> from cultact.types.testing import disable_portlets
+    >>> disable_portlets(portal)
+    >>> import transaction
+    >>> transaction.commit()
+
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(app)
+
+
+All of the following use special test utility views used only in tests,
+configured in such a way that they reflect the active browser layers.
+
+Publishtraverse
+---------------
+
+We have a subsite_request event handler on publishtraverse
+that sets subsite as a variable on the request.
+
+Normally subsite is derived from the SERVER_URL. Since we cannot
+manipulate that in our tests, we use a special ?test_subsite facility.
+
+Unconfigured subsites are not recognized.
+
+    >>> browser.open(portal_url + '/@@subsite-test-view?test_subsite=FOO')
+    >>> browser.contents
+    ''
+
+A valid subsite shows up as a request variable
+
+    >>> browser.open(portal_url + '/@@subsite-test-view?test_subsite=sittard')
+    >>> browser.contents
+    'sittard'
+
+The request layer defaults to the generic cultacttypes browser layer.
+
+    >>> browser.open(portal_url + '/@@layer-test-view')
+    >>> browser.contents
+    'cultactsubsite layer'
+
+Querying for a real subsite, results in a more specific layer marking.
+
+    >>> browser.open(portal_url + '/@@layer-test-view?test_subsite=maastricht')
+    >>> browser.contents
+    'maastricht layer'
+
+    >>> browser.open(portal_url + '/@@layer-test-view?test_subsite=code043')
+    >>> browser.contents
+    'code043 layer'
+
+Some resources are not registered for a specific subsite, but on a
+shared 'cityhub layer'
+
+    >>> browser.open(portal_url + '/@@layer-test-other?test_subsite=maastricht')
+    >>> browser.contents
+    'cityhub layer'
+
+For code043, which is not a cityhub, that means a fallthrough to even deeper
+shared 'subsite' layer
+
+    >>> browser.open(portal_url + '/@@layer-test-other?test_subsite=code043')
+    >>> browser.contents
+    'subsite layer'
+
+
+

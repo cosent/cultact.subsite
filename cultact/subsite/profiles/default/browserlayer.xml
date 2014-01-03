@@ -1,0 +1,4 @@
+<layers>
+  <layer name="cultact.subsite"
+         interface="cultact.subsite.browser.interfaces.ICultactSubsiteLayer" />
+</layers>
