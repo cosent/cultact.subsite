@@ -3,6 +3,8 @@ import transaction
 
 from plone import api
 
+from cultact.subsite import subsite_config
+
 log = logging.getLogger(__name__)
 
 
@@ -17,27 +19,11 @@ def importVarious(context):
 
 def setup_subsites(site):
     # create default content - NOT via (archetypes) collective.setuphelpers
-    if not api.content.get(path='/maastricht'):
-        log.info('Creating subsite: maastricht')
-        api.content.create(
-            type='cultact.maastrichtsite',
-            title='Maastrichtnet',
-            container=site)
-        api.content.rename(obj=site['maastrichtnet'],
-                           new_id='maastricht')
-    if not api.content.get(path='/sittard'):
-        log.info('Creating subsite: sittard')
-        api.content.create(
-            type='cultact.sittardsite',
-            title='Uit In Sittard',
-            container=site)
-        api.content.rename(obj=site['uit-in-sittard'],
-                           new_id='sittard')
-    if not api.content.get(path='/code043'):
-        log.info('Creating subsite: code043')
-        api.content.create(
-            type='cultact.code043site',
-            title='Code 043',
-            container=site)
-        api.content.rename(obj=site['code-043'],
-                           new_id='code043')
+    for (id, title) in subsite_config.items():
+        if not api.content.get(path='/%s' % id):
+            log.info('Creating subsite: %s', id)
+            api.content.create(
+                type='cultact.%ssite' % id,
+                id=id,
+                title=title,
+                container=site)

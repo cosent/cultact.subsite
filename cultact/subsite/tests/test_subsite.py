@@ -3,6 +3,7 @@ import unittest2 as unittest
 from Products.Five.component.interfaces import IObjectManagerSite
 from zope.location.interfaces import ISite
 
+from cultact.subsite import subsite_config, get_subsites
 from cultact.subsite import content
 from cultact.subsite.testing import CULTACT_SUBSITE_INTEGRATION_TESTING
 
@@ -34,3 +35,15 @@ class TestSubsiteIntegration(unittest.TestCase):
         self.assertTrue(IObjectManagerSite.providedBy(mnet))
         self.assertNotEquals(self.portal.getSiteManager(),
                              mnet.getSiteManager())
+
+    def test_subsites(self):
+        self.assertEqual(subsite_config.items(),
+                         [('maastricht', u'Maastrichtnet'),
+                          ('sittard', u'Uit In Sittard'),
+                          ('code043', u'Code 043')])
+
+    def get_get_subsites(self):
+        self.assertEqual([(x.id, x.Title()) for x in get_subsites()],
+                         [('maastricht', 'Maastrichtnet'),
+                          ('sittard', 'Uit In Sittard'),
+                          ('code043', 'Code 043')])
