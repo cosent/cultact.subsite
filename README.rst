@@ -104,6 +104,8 @@ contained in a subsite to make them show up "as if" they were contained in the
 requested subsite.
 
 WIP FIXME: currently browser mixin, make distinct utility view.
+WIP FIXME: remove if we can set up Apache + VHM to fix urls.
+http://plone.org/documentation/kb/plone-apache/vhm
 
 
 Targeted syndication
