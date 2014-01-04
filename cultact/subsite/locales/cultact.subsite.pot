@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-03 18:26+0000\n"
+"POT-Creation-Date: 2014-01-04 12:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,35 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: cultact.subsite\n"
 
+#: ./../profiles/default/types/cultact.code043site.xml
+msgid "Code043 Subsite"
+msgstr ""
+
+#: ./../profiles/default/types/cultact.maastrichtsite.xml
+msgid "Maastricht Subsite"
+msgstr ""
+
+#: ./../profiles/default/types/cultact.sittardsite.xml
+msgid "Sittard Subsite"
+msgstr ""
+
 #. Default: "Bepaalt in welke lokale website dit item getoond wordt."
-#: ./../behaviors/subsite_assignment.py:40
+#: ./../behaviors.py:33
 msgid "help_subsite"
 msgstr ""
 
-#. Default: "Stadsregio"
-#: ./../behaviors/subsite_assignment.py:36
+#. Default: "Prominente kopregel met naam of titel."
+#: ./../content.py:27
+msgid "help_title"
+msgstr ""
+
+#. Default: "Subsite"
+#: ./../behaviors.py:29
 msgid "label_subsite"
+msgstr ""
+
+#. Default: "Title"
+#: ./../content.py:26
+msgid "label_title"
 msgstr ""
 
