@@ -77,3 +77,11 @@ Credits
 Author: Guido A.J. Stevens
 Thanks: Clayton Parker
 
+
+|Cosent|_
+
+This package is maintained by Cosent_.
+
+.. _Cosent: http://cosent.nl
+.. |Cosent| image:: http://cosent.nl/images/logo-external.png 
+                    :alt: Cosent

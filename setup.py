@@ -6,7 +6,7 @@ setup(
     name='cultact.subsite',
     version=version,
     description="Subsite implementation for Plone",
-    long_description=open("README.txt").read(),
+    long_description=open("README.rst").read(),
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
@@ -17,10 +17,10 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    keywords='',
+    keywords='plone subsite theme lineage',
     author='Guido Stevens',
     author_email='guido.stevens@cosent.net',
-    url='http://cosent.nl',
+    url='http://github.com/cosent/cultact.lineage',
     license='GPL',
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['cultact'],
