@@ -54,13 +54,23 @@ a group of subsites.
 
 Having a browser layer per subsite requires hardcoding the subsites in python.
 
-A request.subsite convenience attribute is set by the before_traverse hook
-that also marks the browser layer.
+A request.in_subsite convenience attribute is set by the before_traverse hook
+that also marks the browser layer. This attribute is used by the subsite_assigment
+behavior to provide a default setting.
 
-Subsite request marking is based on virtual URL structure.
+Note that request.subsite is reserved: you can query for ?subsite=foo to 
+obtain items assigned to subsite foo when viewing subsite bar.
+
 See cultact/subsite/tests/subsite.txt for browser layer tests.
 
-WIP FIXME: derive subsite from traversal, not server_name.
+Subsite request marking is based on virtual URL structure, derived from
+SERVER_NAME. The assumption is that VirtualHostMonster is used to anchor
+a virtual host on a subsite, and then use acquisition to obtain the userprofiles
+that are located outside the subsite. VHM is needed to ensure that
+absolute_url() plays nice with such acquisition.
+
+Set up this way, items that are not themselves contained in a subsite
+will show up "as if" they were contained in the requested subsite.
 
 
 Content containers
@@ -74,7 +84,7 @@ per-subsite content interfaces, effectively providing a singleton class
 specific to each subsite for maximally future-proof flexibility.
 
 Since all of this is hardcoded anyway, 'subsite_config' and 'get_subsites()'
-utilities provide a listing of implemented subsites. A setuphandler ensures the creation
+provide a listing of implemented subsites. A setuphandler ensures the creation
 of the configured subsite instances.
 
 
@@ -83,7 +93,7 @@ Assignment behavior
 
 A dexterity behavior makes it possible to assign any content object to
 any subsite, even if it's outside any subsite containment (as most of our
-content is). The assigned subsite id defaults to request.subsite.
+content is). The assigned subsite id defaults to request.in_subsite.
 
 
 Catalog index
@@ -91,21 +101,6 @@ Catalog index
 
 A catalog index enables querying for assigned subsites on content, hence
 filtering content for a specific subsite.
-
-
-absolute_url view
------------------
-
-To be used in conjuction with a virtual hosting setup that projects directly
-onto a specific subsite.
-
-Injects request.subsite into the url path for items that are not themselves
-contained in a subsite to make them show up "as if" they were contained in the
-requested subsite.
-
-WIP FIXME: currently browser mixin, make distinct utility view.
-WIP FIXME: remove if we can set up Apache + VHM to fix urls.
-http://plone.org/documentation/kb/plone-apache/vhm
 
 
 Targeted syndication

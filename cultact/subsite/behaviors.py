@@ -38,7 +38,7 @@ class ISubsiteAssignment(model.Schema):
 
 @form.default_value(field=ISubsiteAssignment['subsite'])
 def default_subsite(data):
-    return data.request.get('subsite', None)
+    return data.request.get('in_subsite', None)
 
 
 alsoProvides(ISubsiteAssignment, IFormFieldProvider)
