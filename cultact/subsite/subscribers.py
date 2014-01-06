@@ -23,7 +23,7 @@ def subsite_request(event):
     for (subsite, customlayer) in subsite_mapping.items():
         if subsite in request.SERVER_URL \
                 or subsite == request.get('test_subsite', ''):
-            request.in_subsite = subsite
+            request.set('in_subsite', subsite)
             layers = [x for x in directlyProvidedBy(request)]
             layers.insert(0, customlayer)
             directlyProvides(request, *layers)
