@@ -22,8 +22,11 @@ def setup_subsites(site):
     for (id, title) in subsite_config.items():
         if not api.content.get(path='/%s' % id):
             log.info('Creating subsite: %s', id)
-            api.content.create(
+            obj = api.content.create(
                 type='cultact.%ssite' % id,
                 id=id,
                 title=title,
                 container=site)
+            # cultact.types test will fail if not published
+            if id in ('sittard', 'maastricht'):  # not: code043
+                api.content.transition(obj=obj, transition='publish')
