@@ -29,4 +29,8 @@ def setup_subsites(site):
                 container=site)
             # cultact.types test will fail if not published
             if id in ('sittard', 'maastricht'):  # not: code043
-                api.content.transition(obj=obj, transition='publish')
+                try:
+                    api.content.transition(obj=obj, transition='publish')
+                except:
+                    log.error("Cannot publish %s (%s)",
+                              id, "happens in policy testing")
