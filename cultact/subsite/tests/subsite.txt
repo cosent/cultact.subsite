@@ -75,17 +75,5 @@ shared 'subsite' layer
     >>> browser.contents
     'subsite layer'
 
-The 'subsite' query keyword is reserved. It enables filtering on items assigned
-to a specific subsite, when viewing another subsite. The following URL would
-query for 'maastricht' items when viewing the 'sittard' subsite:
-
-    >>> browser.open(portal_url + '/@@layer-test-view?test_subsite=sittard&subsite=maastricht')
-    >>> browser.contents
-    'sittard layer'
-
-    >>> browser.open(portal_url + '/@@subsite-test-view?test_subsite=sittard&subsite=maastricht')
-    >>> browser.contents
-    'sittard'
-
 
 

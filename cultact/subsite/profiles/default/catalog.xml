@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <object name="portal_catalog">
-  <index name="subsite" meta_type="KeywordIndex">
-    <indexed_attr value="subsite"/>
+  <index name="subsite_home" meta_type="FieldIndex">
+    <indexed_attr value="subsite_home"/>
+  </index>
+  <index name="subsite_show" meta_type="KeywordIndex">
+    <indexed_attr value="subsite_show"/>
   </index>
 </object>
