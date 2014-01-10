@@ -20,14 +20,18 @@ def subsite_request(event):
     subsite_mapping = {'sittard': customlayers.ISittardLayer,
                        'maastricht': customlayers.IMaastrichtLayer,
                        'code043': customlayers.ICode043Layer}
-    for (subsite, customlayer) in subsite_mapping.items():
-        if subsite in request.SERVER_URL \
-                or subsite == request.get('test_subsite', ''):
-            request.set('in_subsite', subsite)
-            layers = [x for x in directlyProvidedBy(request)]
-            layers.insert(0, customlayer)
-            directlyProvides(request, *layers)
-            return  # break loop
+    chosen = request.get('test_subsite', None)
+    if not chosen:
+        for (subsite, customlayer) in subsite_mapping.items():
+            if subsite in request.SERVER_URL:
+                chosen = subsite
+    # devel
+    if not chosen and 'localhost' in request.SERVER_URL:
+        chosen = 'sittard'
+    request.set('in_subsite', chosen)
+    layers = [x for x in directlyProvidedBy(request)]
+    layers.insert(0, customlayer)
+    directlyProvides(request, *layers)
 
 
 def subsite_added(context, event):
