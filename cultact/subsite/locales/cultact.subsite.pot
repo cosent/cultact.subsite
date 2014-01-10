@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-04 12:59+0000\n"
+"POT-Creation-Date: 2014-01-10 13:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,9 +29,14 @@ msgstr ""
 msgid "Sittard Subsite"
 msgstr ""
 
-#. Default: "Bepaalt in welke lokale website dit item getoond wordt."
-#: ./../behaviors.py:33
-msgid "help_subsite"
+#. Default: "Bepaalt in welke lokale website dit item thuishoort."
+#: ./../behaviors.py:32
+msgid "help_subsite_home"
+msgstr ""
+
+#. Default: "Bepaalt in welke lokale websites dit item getoond wordt."
+#: ./../behaviors.py:46
+msgid "help_subsite_show"
 msgstr ""
 
 #. Default: "Prominente kopregel met naam of titel."
@@ -39,9 +44,14 @@ msgstr ""
 msgid "help_title"
 msgstr ""
 
-#. Default: "Subsite"
-#: ./../behaviors.py:29
-msgid "label_subsite"
+#. Default: "Subsite toewijzing"
+#: ./../behaviors.py:28
+msgid "label_subsite_home"
+msgstr ""
+
+#. Default: "Subsite syndicatie"
+#: ./../behaviors.py:42
+msgid "label_subsite_show"
 msgstr ""
 
 #. Default: "Title"
