@@ -91,24 +91,33 @@ of the configured subsite instances.
 Assignment behavior
 -------------------
 
-A dexterity behavior makes it possible to assign any content object to
+subsite_home: A dexterity behavior makes it possible to assign any content object to
 any subsite, even if it's outside any subsite containment (as most of our
 content is). The assigned subsite id defaults to request.in_subsite.
+The assigned "home" subsite can be assigned by any user
+with the edit permission on content.
+
+subsite_show: Content may be syndicated to other subsites by users with the reviewer
+permission. The behavior enforces that the assigned home subsite will always be
+included in the subsite_show set.
 
 
 Catalog index
 -------------
 
-A catalog index enables querying for assigned subsites on content, hence
+Two catalog indexes enable querying for assigned subsites on content, hence
 filtering content for a specific subsite.
 
+subsite_home: assigned subsite
+subsite_show: all subsites in which this content should be shown
 
-Targeted syndication
---------------------
+This allows you to query for:
+1) all content for which this is the "home" subsite
+2) all content for which this is not the "home" subsite
+3) all content that should be shown in this subsite
+4) all content that is usually not shown in this subsite
 
-Not implemented yet, but foreseen in the design, is a syndication behavior
-that allows for targeted syndication of content to more than just the
-assigned "preferred" subsite.
+Note that typically 3) will be a superset of 1).
 
 
 Credits
