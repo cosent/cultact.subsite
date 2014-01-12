@@ -20,19 +20,20 @@ def subsite_request(event):
     subsite_mapping = {'sittard': customlayers.ISittardLayer,
                        'maastricht': customlayers.IMaastrichtLayer,
                        'code043': customlayers.ICode043Layer}
-    chosen = request.get('test_subsite', None)
-    if not chosen:
+    chosen = None
+    if request.get('test_subsite', None) in subsite_mapping:
+        chosen = request.get('test_subsite')
+    else:
         for (subsite, customlayer) in subsite_mapping.items():
             if subsite in request.SERVER_URL:
                 chosen = subsite
-    # devel
-    if not chosen and 'localhost' in request.SERVER_URL:
-        chosen = 'sittard'
-    request.set('in_subsite', chosen)
-    layers = [x for x in directlyProvidedBy(request)]
-    customlayer = subsite_mapping[chosen]
-    layers.insert(0, customlayer)
-    directlyProvides(request, *layers)
+
+    if chosen:
+        request.set('in_subsite', chosen)
+        layers = [x for x in directlyProvidedBy(request)]
+        customlayer = subsite_mapping[chosen]
+        layers.insert(0, customlayer)
+        directlyProvides(request, *layers)
 
 
 def subsite_added(context, event):
