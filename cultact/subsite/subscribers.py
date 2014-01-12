@@ -30,6 +30,7 @@ def subsite_request(event):
         chosen = 'sittard'
     request.set('in_subsite', chosen)
     layers = [x for x in directlyProvidedBy(request)]
+    customlayer = subsite_mapping[chosen]
     layers.insert(0, customlayer)
     directlyProvides(request, *layers)
 
