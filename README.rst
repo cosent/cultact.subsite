@@ -112,12 +112,14 @@ subsite_home: assigned subsite
 subsite_show: all subsites in which this content should be shown
 
 This allows you to query for:
-1) all content for which this is the "home" subsite
-2) all content for which this is not the "home" subsite
-3) all content that should be shown in this subsite
-4) all content that is usually not shown in this subsite
+1) all content for which this is the "home" subsite (or not)
+2) all content that should be shown in this subsite (or not)
+3) all content from other subsites syndicated to this subsite
 
-Note that typically 3) will be a superset of 1).
+Note that typically 2) will be a superset of 1).
+
+Genericsetup registry records are created to enable using these indexes as
+criteria on Collections.
 
 
 Credits
