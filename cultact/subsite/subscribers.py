@@ -29,11 +29,14 @@ def subsite_request(event):
                 chosen = subsite
 
     if chosen:
+        log.debug('in_subsite=%s', chosen)
         request.set('in_subsite', chosen)
         layers = [x for x in directlyProvidedBy(request)]
         customlayer = subsite_mapping[chosen]
         layers.insert(0, customlayer)
         directlyProvides(request, *layers)
+    else:
+        log.warn("No subsite chosen")
 
 
 def subsite_added(context, event):

@@ -30,6 +30,8 @@ setup(
         'setuptools',
         'plone.api',
         'plone.app.dexterity',
+        'plone.directives.form',
+        'plone.z3cform',
         # -*- Extra requirements: -*-
     ],
     extras_require={
