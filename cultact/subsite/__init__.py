@@ -9,7 +9,7 @@ _ = MessageFactory("cultact.subsite")
 # content interface: IMaastrichtSite
 # content type:      cultact.maastrichtsite  < derived from id in setuphandlers
 subsite_config = OrderedDict([('maastricht', u'Maastrichtnet'),
-                              ('sittard', u'Uit In Sittard'),
+                              ('sittard', u'Uit Sittard-Geleen'),
                               ('code043', u'Code 043')])
 
 

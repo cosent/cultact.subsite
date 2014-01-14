@@ -39,7 +39,7 @@ class TestSubsiteIntegration(unittest.TestCase):
     def test_subsites(self):
         self.assertEqual(subsite_config.items(),
                          [('maastricht', u'Maastrichtnet'),
-                          ('sittard', u'Uit In Sittard'),
+                          ('sittard', u'Uit Sittard-Geleen'),
                           ('code043', u'Code 043')])
 
     def get_get_subsites(self):
