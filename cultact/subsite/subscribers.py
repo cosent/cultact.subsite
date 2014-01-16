@@ -36,7 +36,7 @@ def subsite_request(event):
         layers.insert(0, customlayer)
         directlyProvides(request, *layers)
     else:
-        log.warn("No subsite chosen")
+        log.warn("No subsite chosen: %s", request.ACTUAL_URL)
 
 
 def subsite_added(context, event):
