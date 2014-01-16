@@ -28,9 +28,6 @@ Some content is subsite-specific and resides within a subsite.
 All content, also the stuff outside subsites, needs to be assigned to
 a "preferred" subsite.
 
-In the future, some content needs to be able to be syndicated to chosen
-"other" subsites (different from the "preferred" subsite assignment).
-
 See docs/design.jpg for an overview.
 
 
@@ -56,18 +53,15 @@ Having a browser layer per subsite requires hardcoding the subsites in python.
 
 A request.in_subsite convenience attribute is set by the before_traverse hook
 that also marks the browser layer. This attribute is used by the subsite_assigment
-behavior to provide a default setting.
-
-Note that request.subsite is reserved: you can query for ?subsite=foo to 
-obtain items assigned to subsite foo when viewing subsite bar.
+behavior to provide a default setting for the subsite_home attribute.
 
 See cultact/subsite/tests/subsite.txt for browser layer tests.
 
 Subsite request marking is based on virtual URL structure, derived from
 SERVER_NAME. The assumption is that VirtualHostMonster is used to anchor
-a virtual host on a subsite, and then use acquisition to obtain the userprofiles
+a virtual host on a subsite, and then URL rewrites to access the userprofiles
 that are located outside the subsite. VHM is needed to ensure that
-absolute_url() plays nice with such acquisition.
+absolute_url() plays nice with such acquisition. See example config below.
 
 Set up this way, items that are not themselves contained in a subsite
 will show up "as if" they were contained in the requested subsite.
@@ -102,8 +96,8 @@ permission. The behavior enforces that the assigned home subsite will always be
 included in the subsite_show set.
 
 
-Catalog index
--------------
+Catalog indexes
+---------------
 
 Two catalog indexes enable querying for assigned subsites on content, hence
 filtering content for a specific subsite.
@@ -118,8 +112,103 @@ This allows you to query for:
 
 Note that typically 2) will be a superset of 1).
 
-Genericsetup registry records are created to enable using these indexes as
-criteria on Collections.
+
+Collection criteria
+-------------------
+
+Genericsetup registry records are created to enable using the
+subsite_home and subsite_show indexes as criteria on any Collection.
+
+
+MultisiteCollection behavior
+----------------------------
+
+The default Collection behavior from plone.app.contenttypes forces a
+path query, that is then rewritten by plone.app.querystring to force 
+containment within a INavigationRoot.
+
+For our use case, we want to be able to query outside the current
+INavigationRoot in order to syndicate content from other subsites,
+and from the shared user profiles.
+
+To make this possible, a MultisiteCollection behavior is provided
+which does not inject a path query. This behavior overrides
+the normal Collection behavior (via overrides.zcml).
+
+You can now use subsite_home, subsite_show to set up any Collection 
+search you'd like across multiple subsites.
+
+
+Gotchas
+=======
+
+Anything that is INavigationRoot aware in Plone will require customization
+if you want to be able to access content outside a subsite (=INavigationRoot).
+
+Typically, you'll want to provide custom search and navigation logic.
+
+For Collections, the MultisiteCollection behavior only works as expected
+if you do not use path queries. If you do need multisite path queries you'll
+have to monkeypatch plone.app.querystring.queryparser.
+
+For livesearch, you can either search across all subsites, inject extra query
+variables via URL rewriting, or customize the livesearch view.
+
+There may be other parts of Plone you might need to customize for your use case.
+
+
+URL rewrites
+============
+
+For all of this to work you'll need a URL rewriting frontend config
+that projects shared content outside of the subsite, into the subsite.
+
+Example nginx configuration::
+
+
+    # localhost development only!
+
+    # This adds security headers
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header Strict-Transport-Security "max-age=15768000; includeSubDomains";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+    add_header Content-Security-Policy-Report-Only "default-src 'self'; img-src *; style-src 'unsafe-inline'; script-src 'unsafe-inline' 'unsafe-eval'";
+
+    server {
+        listen 80;
+        server_name maastricht.localhost;
+        # shared user folders
+        rewrite ^/profielen/$  /profielen permanent;
+        rewrite ^/profielen(.*)  /VirtualHostBase/http/$server_name:80/ka/VirtualHostRoot/profielen$1 last;
+        # livesearch all content
+        rewrite ^/livesearch(.*)  /VirtualHostBase/http/$server_name:80/ka/VirtualHostRoot/livesearch$1 last;
+        # serve subsite
+        rewrite ^/(.*)  /VirtualHostBase/http/$server_name:80/ka/maastricht/VirtualHostRoot/$1 last;
+        location / {
+            proxy_set_header Host $server_name;
+            proxy_pass http://127.0.0.1:9933;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name sittard.localhost;
+        # shared user folders
+        rewrite ^/profielen/$  /profielen permanent;
+        rewrite ^/profielen(.*)  /VirtualHostBase/http/$server_name:80/ka/VirtualHostRoot/profielen$1 last;
+        # livesearch all content
+        rewrite ^/livesearch(.*)  /VirtualHostBase/http/$server_name:80/ka/VirtualHostRoot/livesearch$1 last;
+        # serve subsite
+        rewrite ^/(.*)  /VirtualHostBase/http/$server_name:80/ka/sittard/VirtualHostRoot/$1 last;
+        location / {
+            proxy_set_header Host $server_name;
+            proxy_pass http://127.0.0.1:9933;
+        }
+
+    }
+
+YMMV.
 
 
 Credits
