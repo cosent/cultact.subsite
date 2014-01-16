@@ -9,7 +9,16 @@
       provides="plone.app.contenttypes.behaviors.collection.ICollection"
       factory=".behaviors.MultisiteCollection"
       for="plone.dexterity.interfaces.IDexterityContent"
+      marker="plone.app.contenttypes.behaviors.collection.ISyndicatableCollection"
       />
 
+  <!-- temporary backport for Plone 4.3.2 <= 2014-01-16
+       https://dev.plone.org/ticket/13632
+  -->
+  <adapter
+      factory=".adapters.DexterityItem"
+      for="plone.dexterity.interfaces.IDexterityContent
+           Products.CMFPlone.interfaces.syndication.IFeed"
+      provides="Products.CMFPlone.interfaces.syndication.IFeedItem" />
 
 </configure>
