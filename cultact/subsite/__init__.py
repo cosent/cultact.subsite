@@ -12,6 +12,9 @@ subsite_config = OrderedDict([('maastricht', u'Maastrichtnet'),
                               ('sittard', u'Uit Sittard-Geleen'),
                               ('code043', u'Code 043')])
 
+subsite_base = {'maastricht': 'http://maastrichtnet.nl',
+                'sittard': 'http://uitsittardgeleen.nl'}
+
 
 def get_subsites():
     portal = api.portal.get()

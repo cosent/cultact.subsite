@@ -139,6 +139,14 @@ You can now use subsite_home, subsite_show to set up any Collection
 search you'd like across multiple subsites.
 
 
+Canonical URL SEO
+-----------------
+
+A viewlet that overrides plone.app.layout.links.CanonicalURL is provided
+for SEO purposes, pointing to the canonical URL for objects that are shown
+in a different subsite than their "home" subsite.
+
+
 Gotchas
 =======
 

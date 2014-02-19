@@ -3,6 +3,14 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:i18n="http://namespaces.zope.org/i18n"
-    i18n_domain="ripe.types">
+    i18n_domain="cultact.subsite">
+
+ <browser:viewlet
+        name="plone.links.canonical_url"
+        manager="plone.app.layout.viewlets.interfaces.IHtmlHeadLinks"
+        class=".viewlets.CanonicalSubsiteURL"
+        permission="zope2.View"
+        layer=".interfaces.ICultactSubsiteLayer"
+        />
 
 </configure>
