@@ -1,13 +1,12 @@
 from plone.app.contenttypes.behaviors import collection
 from plone.autoform.interfaces import IFormFieldProvider
-from plone.dexterity.interfaces import IDexterityContent
 from plone.directives import form
 from plone.supermodel import model
 from rwproperty import getproperty, setproperty
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
-from zope.component import getMultiAdapter, adapts
-from zope.interface import alsoProvides, implements
+from zope.component import getMultiAdapter
+from zope.interface import alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 from cultact.subsite import _
