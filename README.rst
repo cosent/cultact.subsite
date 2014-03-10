@@ -147,6 +147,12 @@ for SEO purposes, pointing to the canonical URL for objects that are shown
 in a different subsite than their "home" subsite.
 
 
+Products.Doormat footer viewlet
+-------------------------------
+
+This package contains an override viewlet that makes Products.Doormat subsite-aware.
+
+
 Gotchas
 =======
 

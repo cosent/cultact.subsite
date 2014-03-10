@@ -1,0 +1,2 @@
+<tal:getView tal:condition="view/available"
+             tal:content="structure view/doormat/@@doormat-view" />
