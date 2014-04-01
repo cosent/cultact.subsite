@@ -1,0 +1,71 @@
+Behaviors
+=========
+
+This package provides a behavior called `cultact.subsite.behaviors.ISubsiteAssignment`.
+
+Let's test this, based on the template provided at
+http://developer.plone.org/reference_manuals/external/plone.app.dexterity/behaviors/testing-behaviors.html
+
+Test setup
+----------
+
+See testing.py for zcml loading.
+
+This behavior can be enabled for any `IDexterityContent`. For the purposes of
+testing, we will use the CMFDefault Document type and a custom
+IBehaviorAssignable adapter to mark the behavior as enabled.
+
+    >>> from Products.CMFDefault.Document import Document
+
+    >>> from plone.behavior.interfaces import IBehaviorAssignable
+    >>> from cultact.subsite.behaviors import ISubsiteAssignment
+    >>> from zope.component import adapts
+    >>> from zope.interface import implements
+    >>> class TestingAssignable(object):
+    ...     implements(IBehaviorAssignable)
+    ...     adapts(Document)
+    ...
+    ...     enabled = [ISubsiteAssignment]
+    ...
+    ...     def __init__(self, context):
+    ...         self.context = context
+    ...
+    ...     def supports(self, behavior_interface):
+    ...         return behavior_interface in self.enabled
+    ...
+    ...     def enumerate_behaviors(self):
+    ...         for e in self.enabled:
+    ...             yield queryUtility(IBehavior, name=e.__identifier__)
+
+    >>> from zope.component import provideAdapter
+    >>> provideAdapter(TestingAssignable)
+
+Behavior installation
+---------------------
+
+We can now test that the behavior is installed when the ZCML for this package
+is loaded.
+
+    >>> from zope.component import getUtility
+    >>> from plone.behavior.interfaces import IBehavior
+    >>> subsite_behavior = getUtility(IBehavior, name='cultact.subsite.behaviors.ISubsiteAssignment')
+    >>> subsite_behavior.interface
+    <SchemaClass cultact.subsite.behaviors.ISubsiteAssignment>
+
+We also expect this behavior to be a form field provider. Let's verify that.
+
+    >>> from plone.directives.form import IFormFieldProvider
+    >>> IFormFieldProvider.providedBy(subsite_behavior.interface)
+    True
+
+Using the behavior
+------------------
+
+Let's create a content object that has this behavior enabled and check that
+it works.
+
+    >>> doc = Document('doc')
+    >>> subsite_adapter = ISubsiteAssignment(doc, None)
+    >>> subsite_adapter is not None
+    True
+

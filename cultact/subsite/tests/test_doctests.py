@@ -10,7 +10,7 @@ optionflags = (doctest.NORMALIZE_WHITESPACE
                | doctest.REPORT_ONLY_FIRST_FAILURE)
 
 
-normal_testfiles = ['subsite.txt']
+normal_testfiles = ['subsite.txt', 'behavior.txt']
 
 
 def test_suite():
