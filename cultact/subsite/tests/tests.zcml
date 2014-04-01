@@ -4,6 +4,7 @@
     xmlns:browser="http://namespaces.zope.org/browser">
 
   <!-- avoid dexterity dependency in test -->
+<!--
   <plone:behavior
       title="SubSite Assignment"
       description="Virtual site classification for content"
@@ -11,7 +12,7 @@
       factory="..behaviors.SubsiteAssignment"
       for="Products.CMFCore.interfaces.IDublinCore"
       />
-
+-->
   <browser:page
       name="subsite-test-view"
       for="*"

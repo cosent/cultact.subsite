@@ -48,6 +48,14 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:registerProfile
+      name="test"
+      title="subsite test"
+      directory="profiles/test"
+      description="Test setup for cultact.subsite"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
   <!-- setuphandlers via profiles/default/import_steps.xml -->
 
   <!-- for debugging only / auto loaded in tests -->

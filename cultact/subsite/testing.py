@@ -3,6 +3,7 @@ from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
+
 from plone.testing import z2
 from zope.configuration import xmlconfig
 
@@ -43,8 +44,7 @@ class CultactSubsiteLayer(PloneSandboxLayer):
         # Installs all the Plone stuff. Workflows etc.
         applyProfile(portal, 'Products.CMFPlone:plone')
         # our stuff
-        applyProfile(portal, 'cultact.subsite:default')
-
+        applyProfile(portal, 'cultact.subsite:test')
 
 CULTACT_SUBSITE_FIXTURE = CultactSubsiteLayer()
 CULTACT_SUBSITE_INTEGRATION_TESTING = IntegrationTesting(

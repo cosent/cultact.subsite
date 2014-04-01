@@ -3,69 +3,131 @@ Behaviors
 
 This package provides a behavior called `cultact.subsite.behaviors.ISubsiteAssignment`.
 
-Let's test this, based on the template provided at
-http://developer.plone.org/reference_manuals/external/plone.app.dexterity/behaviors/testing-behaviors.html
 
 Test setup
 ----------
 
-See testing.py for zcml loading.
+Set up the test permissions.
 
-This behavior can be enabled for any `IDexterityContent`. For the purposes of
-testing, we will use the CMFDefault Document type and a custom
-IBehaviorAssignable adapter to mark the behavior as enabled.
+    >>> portal = layer['portal']
+    >>> from plone.app.testing import setRoles
+    >>> from plone.app.testing import TEST_USER_ID
+    >>> setRoles(portal, TEST_USER_ID, ['Manager'])
 
-    >>> from Products.CMFDefault.Document import Document
+The cultact.subsite:test profile provides a content type with the behavior enabled.
 
-    >>> from plone.behavior.interfaces import IBehaviorAssignable
-    >>> from cultact.subsite.behaviors import ISubsiteAssignment
-    >>> from zope.component import adapts
-    >>> from zope.interface import implements
-    >>> class TestingAssignable(object):
-    ...     implements(IBehaviorAssignable)
-    ...     adapts(Document)
+Create a test document
+
+    >>> portal.invokeFactory('cultact.testdocument', 'doc1', title=u"Doc 1")
+    'doc1'
+    >>> portal.doc1
+    <TestDocument at /plone/doc1>
+
+Out of the box, the behavior properties are not set yet on the object.
+
+    >>> portal.doc1.subsite_home
+    Traceback (most recent call last):
     ...
-    ...     enabled = [ISubsiteAssignment]
-    ...
-    ...     def __init__(self, context):
-    ...         self.context = context
-    ...
-    ...     def supports(self, behavior_interface):
-    ...         return behavior_interface in self.enabled
-    ...
-    ...     def enumerate_behaviors(self):
-    ...         for e in self.enabled:
-    ...             yield queryUtility(IBehavior, name=e.__identifier__)
+    AttributeError: subsite_home
 
-    >>> from zope.component import provideAdapter
-    >>> provideAdapter(TestingAssignable)
-
-Behavior installation
----------------------
-
-We can now test that the behavior is installed when the ZCML for this package
-is loaded.
-
-    >>> from zope.component import getUtility
-    >>> from plone.behavior.interfaces import IBehavior
-    >>> subsite_behavior = getUtility(IBehavior, name='cultact.subsite.behaviors.ISubsiteAssignment')
-    >>> subsite_behavior.interface
-    <SchemaClass cultact.subsite.behaviors.ISubsiteAssignment>
-
-We also expect this behavior to be a form field provider. Let's verify that.
-
-    >>> from plone.directives.form import IFormFieldProvider
-    >>> IFormFieldProvider.providedBy(subsite_behavior.interface)
-    True
 
 Using the behavior
 ------------------
 
-Let's create a content object that has this behavior enabled and check that
-it works.
+Setting a subsite_home on the behavior sets it on the object
 
-    >>> doc = Document('doc')
-    >>> subsite_adapter = ISubsiteAssignment(doc, None)
-    >>> subsite_adapter is not None
-    True
+    >>> from cultact.subsite.behaviors import ISubsiteAssignment
+    >>> ISubsiteAssignment(portal.doc1).subsite_home = 'maastricht'
+    >>> portal.doc1.subsite_home
+    'maastricht'
+
+Subsite_home is also propagated to subsite_show
+
+    >>> portal.doc1.subsite_show
+    set(['maastricht'])
+
+Setting a different subsite_show auto-adds the home subsite as well.
+
+    >>> ISubsiteAssignment(portal.doc1).subsite_show = set(['sittard'])
+    >>> portal.doc1.subsite_show
+    set(['sittard', 'maastricht'])
+
+Handling 'None' choices
+-----------------------
+
+Create some more test documents
+
+    >>> portal.invokeFactory('cultact.testdocument', 'doc2', title=u"Doc 2")
+    'doc2'
+
+    >>> portal.invokeFactory('cultact.testdocument', 'doc3', title=u"Doc 3")
+    'doc3'
+
+    >>> portal.invokeFactory('cultact.testdocument', 'doc4', title=u"Doc 4")
+    'doc4'
+
+Set the doc3 subsite_home to None
+
+    >>> ISubsiteAssignment(portal.doc3).subsite_home = None
+    >>> portal.doc3.subsite_home
+
+(In the test, a <None> return value shows up as blank)
+
+    >>> portal.doc3.subsite_show
+    set([])
+
+
+Search the catalog
+------------------
+
+    >>> ISubsiteAssignment(portal.doc1).subsite_home = 'maastricht'
+    >>> ISubsiteAssignment(portal.doc1).subsite_show = set(['maastricht'])
+    >>> portal.doc1.reindexObject()
+    >>> ISubsiteAssignment(portal.doc2).subsite_home = 'sittard'
+    >>> ISubsiteAssignment(portal.doc2).subsite_show = set(['sittard', 'maastricht'])
+    >>> portal.doc2.reindexObject()
+    >>> ISubsiteAssignment(portal.doc3).subsite_home = None
+    >>> ISubsiteAssignment(portal.doc3).subsite_show = set(['maastricht'])
+    >>> portal.doc3.reindexObject()
+    >>> ISubsiteAssignment(portal.doc4).subsite_home = None
+    >>> ISubsiteAssignment(portal.doc4).subsite_show = set([None])
+    >>> portal.doc3.reindexObject()
+
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> catalog = getToolByName(portal, 'portal_catalog')
+
+Search for maastricht
+
+    >>> result = catalog(subsite_home='maastricht')
+    >>> [x.id for x in result]
+    ['doc1']
+
+    >>> result = catalog(subsite_show='maastricht')
+    >>> sorted([x.id for x in result])
+    ['doc1', 'doc2', 'doc3']
+
+
+Search for sittard
+
+    >>> result = catalog(subsite_home='sittard')
+    >>> [x.id for x in result]
+    ['doc2']
+
+    >>> result = catalog(subsite_show='sittard')
+    >>> [x.id for x in result]
+    ['doc2']
+
+Searching for None breaks, because it's not supported by the KeywordIndex
+
+    >>> result = catalog(subsite_home=None)
+    >>> [x.id for x in result]
+    []
+
+This should become:    ['doc3', 'doc4']
+
+    >>> result = catalog(subsite_show=None)
+    >>> [x.id for x in result]
+    []
+
+This should become:    ['doc4']
 
