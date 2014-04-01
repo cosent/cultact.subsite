@@ -81,22 +81,22 @@ class SubsiteAssignment(object):
 
     @setproperty  # flake8: noqa
     def subsite_home(self, value):
-        self.context.subsite_home = value
+        self.context.subsite_home = value and value or 'None'
         # sync subsite_show
-        home = value and [value] or []
+        home = value and [value] or ['None']
         show = getattr(self.context, 'subsite_show', set())
         self.context.subsite_show = show.union(home)
 
     @getproperty
     def subsite_show(self):
-        home = self.subsite_home and [self.subsite_home] or []
+        home = self.subsite_home and [self.subsite_home] or ['None']
         show = getattr(self.context, 'subsite_show', set())
         # always includes subsite_home (if not None)
         return show.union(home)
 
     @setproperty  # flake8: noqa
     def subsite_show(self, value):
-        home = self.subsite_home and [self.subsite_home] or []
+        home = self.subsite_home and [self.subsite_home] or ['None']
         show = value or set()
         # always includes subsite_home (if not None)
         self.context.subsite_show = show.union(home)

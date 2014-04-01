@@ -66,15 +66,14 @@ Create some more test documents
     >>> portal.invokeFactory('cultact.testdocument', 'doc4', title=u"Doc 4")
     'doc4'
 
-Set the doc3 subsite_home to None
+Set the doc3 subsite_home to None stores a string placeholder 'None' to please the KeywordIndex
 
     >>> ISubsiteAssignment(portal.doc3).subsite_home = None
     >>> portal.doc3.subsite_home
-
-(In the test, a <None> return value shows up as blank)
+    'None'
 
     >>> portal.doc3.subsite_show
-    set([])
+    set(['None'])
 
 
 Search the catalog
@@ -87,11 +86,11 @@ Search the catalog
     >>> ISubsiteAssignment(portal.doc2).subsite_show = set(['sittard', 'maastricht'])
     >>> portal.doc2.reindexObject()
     >>> ISubsiteAssignment(portal.doc3).subsite_home = None
-    >>> ISubsiteAssignment(portal.doc3).subsite_show = set(['maastricht'])
+    >>> ISubsiteAssignment(portal.doc3).subsite_show = set(['maastricht'])  # + None, automatically
     >>> portal.doc3.reindexObject()
     >>> ISubsiteAssignment(portal.doc4).subsite_home = None
     >>> ISubsiteAssignment(portal.doc4).subsite_show = set([None])
-    >>> portal.doc3.reindexObject()
+    >>> portal.doc4.reindexObject()
 
     >>> from Products.CMFCore.utils import getToolByName
     >>> catalog = getToolByName(portal, 'portal_catalog')
@@ -117,17 +116,35 @@ Search for sittard
     >>> [x.id for x in result]
     ['doc2']
 
-Searching for None breaks, because it's not supported by the KeywordIndex
+Combined search
 
-    >>> result = catalog(subsite_home=None)
+    >>> result = catalog(subsite_home='sittard', subsite_show='maastricht')
     >>> [x.id for x in result]
-    []
+    ['doc2']
 
-This should become:    ['doc3', 'doc4']
 
-    >>> result = catalog(subsite_show=None)
+Searching for None
+------------------
+
+Searching for None is not supported by the KeywordIndex.
+Instead the behavior stores values of None as 'None' (the string)
+so we can now query for 'None'.
+
+    >>> result = catalog(subsite_home='None')
     >>> [x.id for x in result]
-    []
+    ['doc3', 'doc4']
 
-This should become:    ['doc4']
+    >>> result = catalog(subsite_show='None')
+    >>> [x.id for x in result]
+    ['doc3', 'doc4']
+
+Combined searches involving None
+
+    >>> result = catalog(subsite_home='None', subsite_show='maastricht')
+    >>> [x.id for x in result]
+    ['doc3']
+
+    >>> result = catalog(subsite_home='None', subsite_show='None')
+    >>> [x.id for x in result]
+    ['doc3', 'doc4']
 
